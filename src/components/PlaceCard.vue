@@ -3,7 +3,7 @@
     <v-card-title primary-title>
       <div>
           <h3 class="headline mb-0">{{placeData.name}}</h3>
-          <div>{{placeData.address}}
+          <div>{{placeData.description}}
           </div>
       </div>
     </v-card-title>

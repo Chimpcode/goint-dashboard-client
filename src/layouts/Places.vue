@@ -58,7 +58,10 @@
     </v-layout>
     <LocationForm 
       :kind-form="openFormTrigger"
-      @on-close-dialog="onCloseLocationForm">
+      @on-close-dialog="onCloseLocationForm"
+      @on-create-location="onCreateLocation"
+      @on-create-cluster="onCreateCluster"
+      @on-create-store="onCreateStore">
     </LocationForm>
   </div>
 </template>
@@ -88,14 +91,14 @@ export default {
         { position: {lat: -11.893948, lng: -77.043290}, address: 'AURB. ADLksdlka ASDLK 343', id: 'place 4', createdAt: '14/2/17' }
       ],
       stores: [
-        { positions: [], name: 'Tienda 1', address: 'ABSDKJASJKDSD', coupons: 12, createdAt: '14/2/17' },
-        { positions: [], name: 'Tienda 1', address: 'ABSDKJASJKDSD', coupons: 12, createdAt: '14/2/17' },
-        { positions: [], name: 'Tienda 1', address: 'ABSDKJASJKDSD', coupons: 12, createdAt: '14/2/17' }
+        { positions: [], name: 'Tienda 1', description: 'ABSDKJASJKDSD', coupons: 12, createdAt: '14/2/17' },
+        { positions: [], name: 'Tienda 1', description: 'ABSDKJASJKDSD', coupons: 12, createdAt: '14/2/17' },
+        { positions: [], name: 'Tienda 1', description: 'ABSDKJASJKDSD', coupons: 12, createdAt: '14/2/17' }
       ],
       groups: [
-        { tiendas: [], name: 'Grupo A', description: 'Grupo A' },
-        { tiendas: [], name: 'Grupo A', description: 'Grupo A' },
-        { tiendas: [], name: 'Grupo A', description: 'Grupo A' }
+        { tiendas: [], name: 'Grupo A' },
+        { tiendas: [], name: 'Grupo A' },
+        { tiendas: [], name: 'Grupo A' }
       ]
     }
   },
@@ -106,7 +109,28 @@ export default {
     },
     onCloseLocationForm: function (closeValue) {
       this.openFormTrigger = ''
+    },
+    onCreateCluster: function (newCluster) {
+      console.log(newCluster)
+      this.groups.push({
+        name: newCluster.name
+      })
+    },
+    onCreateStore: function (newStore) {
+      console.log(newStore)
+      this.stores.push({
+        name: newStore.name,
+        description: newStore.description
+      })
+    },
+    onCreateLocation: function (newLocation) {
+      console.log(newLocation)
+      this.locations.push({
+        address: newLocation.address,
+        position: newLocation.position
+      })
     }
+
   }
 }
 </script>
