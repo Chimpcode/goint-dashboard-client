@@ -104,27 +104,27 @@ export default {
   },
   methods: {
     openForm: function (kindForm) {
-      console.log('click places', kindForm)
+      // console.log('click places', kindForm)
       this.openFormTrigger = kindForm
     },
     onCloseLocationForm: function (closeValue) {
       this.openFormTrigger = ''
     },
     onCreateCluster: function (newCluster) {
-      console.log(newCluster)
+      // console.log(newCluster)
       this.groups.push({
         name: newCluster.name
       })
     },
     onCreateStore: function (newStore) {
-      console.log(newStore)
+      // console.log(newStore)
       this.stores.push({
         name: newStore.name,
         description: newStore.description
       })
     },
     onCreateLocation: function (newLocation) {
-      console.log(newLocation)
+      // console.log(newLocation)
       this.locations.push({
         address: newLocation.address,
         position: newLocation.position

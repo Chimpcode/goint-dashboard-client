@@ -102,7 +102,7 @@ export default {
   computed: {
     isOpen: {
       get: function () {
-        console.log('kindform', this.kindForm)
+        // console.log('kindform', this.kindForm)
         if (this.kindForm === '' || this.kindForm === undefined) {
           return false
         }
