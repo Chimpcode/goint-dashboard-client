@@ -46,15 +46,16 @@
               <promo-card 
                 :color="colorvariants[index%5]" 
                 :promo-data="promo"
-                @on-edit-mode="active_state=states[2]"/>
+                @on-edit-mode="postObjToEdit = promo; active_state=states[2]"/>
             </v-flex> 
           </v-layout>
 
-          <!-- ADD VIEW -->
+          <!-- ADD / EDIT VIEW -->
           <post-form
             v-if="active_state==='add' || active_state==='edit'"
             :is-new="active_state===states[1]? true : false"
-            :postObj="postObjToEdit">
+            :postObj="postObjToEdit"
+            @on-create-update-post="onCreateUpdatePost">
           </post-form>
         </v-container>
       </v-flex>
@@ -79,12 +80,21 @@ export default {
       } else {
         this.active_state = this.states[1]
       }
+    },
+    onCreateUpdatePost: function (newPost) {
+      this.promociones.push({
+        createdAt: newPost.createdAt,
+        title: newPost.title,
+        description: newPost.description,
+        availableCoupons: newPost.availableCoupons,
+        finishDate: newPost.finishDate
+      })
+      this.active_state = 'list'
     }
   },
   data () {
     return {
       states: ['list', 'add', 'edit'],
-      location_items: ['ZONA 1', 'ZONA 2', 'ZONA 3'],
       location_selected: null,
       // active_state: 'list',
       active_state: 'list',
@@ -100,31 +110,15 @@ export default {
           title: 'PromoA',
           description: 'Lorem Ipsum ....',
           availableCoupons: 13,
-          finishDate: '12/18'
+          finishDate: '12/18',
+          location: '1'
         }, {
           createdAt: '12/04/18',
           title: 'PromoA',
           description: 'Lorem Ipsum ....',
           availableCoupons: 13,
-          finishDate: '12/18'
-        }, {
-          createdAt: '12/04/18',
-          title: 'PromoA',
-          description: 'Lorem Ipsum ....',
-          availableCoupons: 13,
-          finishDate: '12/18'
-        }, {
-          createdAt: '12/04/18',
-          title: 'PromoA',
-          description: 'Lorem Ipsum ....',
-          availableCoupons: 13,
-          finishDate: '12/18'
-        }, {
-          createdAt: '12/04/18',
-          title: 'PromoA',
-          description: 'Lorem Ipsum ....',
-          availableCoupons: 13,
-          finishDate: '12/18'
+          finishDate: '12/18',
+          location: '2'
         }
       ],
       colorvariants: ['teal', 'pink', 'blue', 'red', 'green']

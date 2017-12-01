@@ -41,6 +41,6 @@ export default {
   font-family : NexaLight
   margin-left : 72px
   // color: #cbcbcb
-#dashboard > .body
-  margin-left : 22px
+// #dashboard > .body
+//   margin-left : 22px
 </style>

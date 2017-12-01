@@ -3,7 +3,7 @@
     <v-flex xs12 md5 offset-md3>
       <v-layout row wrap>
         <v-flex xs12>
-          <h3>{{ isNew? 'Crear promocion': 'Editar promocion'}}</h3>
+          <h3>{{ isNew? 'Crear promocion': 'Editar promocion'}} <span class="green--text">&nbsp;{{infomessage}}</span></h3>
         </v-flex>
         <!-- image -->
         <v-flex xs12>
@@ -18,7 +18,7 @@
           <v-text-field 
             label="nombre" 
             name="title"
-            v-model="postEdit.name"
+            v-model="postEdit.title"
             >
           </v-text-field>
         </v-flex>
@@ -28,7 +28,7 @@
             label="Capacidad Cupones"
             single-line
             prepend-icon="local_activity"
-            v-model="postEdit.cupones"
+            v-model="postEdit.availableCoupons"
           ></v-text-field>
         </v-flex>
         <v-flex xs4 offset-xs1>
@@ -67,6 +67,8 @@
             v-bind:items="location_items"
             v-model="postEdit.location"
             label="Ubicarlo en:"
+            item-value="id"
+            item-text="label"
             single-line
             bottom
           ></v-select>
@@ -83,7 +85,10 @@
         </v-flex>
           
         <v-flex xs12 class="text-xs-right">
-          <v-btn color="primary">{{ isNew ? 'CREAR' : 'EDITAR' }}</v-btn>
+          <v-btn color="primary"
+            @click.native.stop="createOrUpdatePost">
+            {{ isNew ? 'CREAR' : 'EDITAR' }}
+          </v-btn>
         </v-flex>
       </v-layout>
     </v-flex> 
@@ -102,9 +107,28 @@ export default {
   },
   data () {
     return {
-      location_items: ['ZONA 1', 'ZONA 2', 'ZONA 3'],
+      infomessage: '',
+      location_items: [
+        { label: 'ZONA 1', id: '1'},
+        { label: 'ZONA 2', id: '2'},
+        { label: 'ZONA 3', id: '3'}
+      ],
       timepicker_date: null,
       timepicker_menu: false
+    }
+  },
+  methods: {
+    createOrUpdatePost: function () {
+      // test
+      if (this.postEdit.createdAt === undefined) {
+        this.postEdit.createdAt = '13/13/13'
+      }
+      if (this.isNew) {
+        this.infomessage = 'Promocion creada'
+        this.$emit('on-create-post', this.postEdit)
+        return true
+      }
+      this.infomessage = 'Promocion editada'
     }
   },
   computed: {
