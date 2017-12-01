@@ -56,6 +56,16 @@
           <v-card-text>
             <v-text-field v-model="tiendaForm.name" label="Nombre" name="tiendaName"/>
             <v-text-field v-model="tiendaForm.description" label="Descripcion" name="tiendaDescription"/>
+            <v-select
+              :items="locations"
+              v-model="tiendaForm.positions"
+              multiple
+              chips
+              autocomplete
+              label="Inserte ubicaciones"
+              item-value="address"
+              item-text="address"
+            />
           </v-card-text>
           <v-card-actions class="roboto">
             <v-spacer/>
@@ -74,6 +84,16 @@
           <v-card-title class="title"> Agregar Sector &nbsp;<span class="green--text">{{infomessage}}</span></v-card-title>
           <v-card-text>
             <v-text-field v-model="sectorForm.name" label="Nombre" name="sectorName"/>
+            <v-select
+              :items="stores"
+              v-model="sectorForm.tiendas"
+              multiple
+              chips
+              autocomplete
+              label="Inserte tiendas"
+              item-value="name"
+              item-text="name"
+            />
           </v-card-text>
           <v-card-actions class="roboto">
             <v-spacer/>
@@ -133,11 +153,17 @@ export default {
         address: '',
         position: {lat: -12.122369, lng: -77.030339}
       },
+      // these are goint to be fetched
       locations: [
-        { position: {lat: -11.891670, lng: -77.044149}, address: 'AURB. ADLksdlka ASDLK 343' },
-        { position: {lat: -11.885330, lng: -77.058117}, address: 'AURB. ADLksdlka ASDLK 343' },
-        { position: {lat: -11.900784, lng: -77.038151}, address: 'AURB. ADLksdlka ASDLK 343' },
-        { position: {lat: -11.893948, lng: -77.043290}, address: 'AURB. ADLksdlka ASDLK 343' }
+        { position: {lat: -11.891670, lng: -77.044149}, address: 'AURB 343', id: '1' },
+        { position: {lat: -11.885330, lng: -77.058117}, address: '123. ADLksdlka ASDLK 343', id: '2' },
+        { position: {lat: -11.900784, lng: -77.038151}, address: '4567. ADLksdlka ASDLK 343', id: '3' },
+        { position: {lat: -11.893948, lng: -77.043290}, address: '987978. ADLksdlka ASDLK 343', id: '4' }
+      ],
+      stores: [
+        { positions: [], name: 'Tienda 1', description: 'ABSDKJASJKDSD', coupons: 12, createdAt: '14/2/17' },
+        { positions: [], name: 'Tienda 2', description: 'ABSDKJASJKDSD', coupons: 12, createdAt: '14/2/17' },
+        { positions: [], name: 'Tienda 3', description: 'ABSDKJASJKDSD', coupons: 12, createdAt: '14/2/17' }
       ]
     }
   },

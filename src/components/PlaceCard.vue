@@ -9,8 +9,8 @@
     </v-card-title>
     <v-card-text>
         <h5>Ubicaciones: </h5>
-        <div>
-            
+        <div class="black--text" v-for="(location, i) in placeData.positions" :key="i">
+          <span>{{location}}</span>
         </div>
     </v-card-text>
     <v-card-actions class="roboto">

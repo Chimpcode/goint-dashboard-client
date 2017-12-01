@@ -7,8 +7,8 @@
     </v-card-title>
     <v-card-text>
         <h5>Tiendas: </h5>
-        <div>
-            
+        <div class="black--text" v-for="(tienda, i) in clusterData.tiendas" :key="i">
+          <span>{{tienda}}</span>
         </div>
     </v-card-text>
     <v-card-actions class="roboto">

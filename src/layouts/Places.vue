@@ -83,12 +83,12 @@ export default {
       openFormTrigger: '',
       locations: [
         { position: {lat: -11.891670, lng: -77.044149}, address: 'AURB. ADLksdlka ASDLK 343', id: 'place 1', createdAt: '14/2/17' },
-        { position: {lat: -11.885330, lng: -77.058117}, address: 'AURB. ADLksdlka ASDLK 343', id: 'place 2', createdAt: '14/2/17' },
-        { position: {lat: -11.900784, lng: -77.038151}, address: 'AURB. ADLksdlka ASDLK 343', id: 'place 3', createdAt: '14/2/17' },
-        { position: {lat: -11.893948, lng: -77.043290}, address: 'AURB. ADLksdlka ASDLK 343', id: 'place 4', createdAt: '14/2/17' },
-        { position: {lat: -11.893948, lng: -77.043290}, address: 'AURB. ADLksdlka ASDLK 343', id: 'place 4', createdAt: '14/2/17' },
-        { position: {lat: -11.893948, lng: -77.043290}, address: 'AURB. ADLksdlka ASDLK 343', id: 'place 4', createdAt: '14/2/17' },
-        { position: {lat: -11.893948, lng: -77.043290}, address: 'AURB. ADLksdlka ASDLK 343', id: 'place 4', createdAt: '14/2/17' }
+        { position: {lat: -11.885330, lng: -77.058117}, address: '234. ADLksdlka ASDLK 343', id: 'place 2', createdAt: '14/2/17' },
+        { position: {lat: -11.900784, lng: -77.038151}, address: '5464. ADLksdlka ASDLK 343', id: 'place 3', createdAt: '14/2/17' },
+        { position: {lat: -11.893948, lng: -77.043290}, address: 'asd. ADLksdlka ASDLK 343', id: 'place 4', createdAt: '14/2/17' },
+        { position: {lat: -11.893948, lng: -77.043290}, address: '67879. ADLksdlka ASDLK 343', id: 'place 4', createdAt: '14/2/17' },
+        { position: {lat: -11.893948, lng: -77.043290}, address: '789789. ADLksdlka ASDLK 343', id: 'place 4', createdAt: '14/2/17' },
+        { position: {lat: -11.893948, lng: -77.043290}, address: '4354. ADLksdlka ASDLK 343', id: 'place 4', createdAt: '14/2/17' }
       ],
       stores: [
         { positions: [], name: 'Tienda 1', description: 'ABSDKJASJKDSD', coupons: 12, createdAt: '14/2/17' },
@@ -113,14 +113,16 @@ export default {
     onCreateCluster: function (newCluster) {
       // console.log(newCluster)
       this.groups.push({
-        name: newCluster.name
+        name: newCluster.name,
+        tiendas: newCluster.tiendas
       })
     },
     onCreateStore: function (newStore) {
       // console.log(newStore)
       this.stores.push({
         name: newStore.name,
-        description: newStore.description
+        description: newStore.description,
+        positions: newStore.positions
       })
     },
     onCreateLocation: function (newLocation) {
