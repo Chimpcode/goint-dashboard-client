@@ -57,9 +57,9 @@ export default {
     return {
       deleteDialog: false,
       location_items: {
-        1:  'ZONA 1',
-        2:  'ZONA 2',
-        3:  'ZONA 3'
+        1: 'ZONA 1',
+        2: 'ZONA 2',
+        3: 'ZONA 3'
       }
     }
   },

@@ -109,9 +109,9 @@ export default {
     return {
       infomessage: '',
       location_items: [
-        { label: 'ZONA 1', id: '1'},
-        { label: 'ZONA 2', id: '2'},
-        { label: 'ZONA 3', id: '3'}
+        { label: 'ZONA 1', id: '1' },
+        { label: 'ZONA 2', id: '2' },
+        { label: 'ZONA 3', id: '3' }
       ],
       timepicker_date: null,
       timepicker_menu: false
