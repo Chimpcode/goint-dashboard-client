@@ -5,8 +5,11 @@ import App from './App'
 import router from './router'
 import Vuetify from 'vuetify'
 import * as VueGoogleMaps from 'vue2-google-maps'
+import GraphPlugin from 'graphito'
+import graphito from './graphrecipes'
 
 Vue.config.productionTip = false
+Vue.use(GraphPlugin, { url: 'http://13.90.253.208:9300/api/v1/u' })
 
 Vue.use(VueGoogleMaps, {
   load: {
@@ -40,6 +43,7 @@ Vue.use(Vuetify, {
 new Vue({
   el: '#app',
   router,
+  graphito,
   template: '<App/>',
   components: { App }
 })

@@ -6,13 +6,21 @@
 
 <script>
 export default {
-  name: 'app'
+  name: 'app',
+  created () {
+    // this.$graphito.printTransport()
+    this.$graphito.call_query('fetchAllUsers').then(
+      result => {
+        console.log('app.vue', result)
+      }
+    )
+  }
 }
 </script>
 
 <style lang="stylus">
 body, html
-  margin: 0px
+  margin: 0
   background-color: #F7F7F8
   overflow-y auto !important
 #app{
