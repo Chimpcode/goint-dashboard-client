@@ -22,7 +22,8 @@
       </v-tooltip>
       <v-tooltip bottom>
         <v-btn flat icon color="primary"
-        class="" slot="activator">
+               class="" slot="activator"
+               @click.native.stop="onEditLocation">
           <v-icon>mode_edit</v-icon>
         </v-btn>
         <span>Editar?</span>
@@ -39,6 +40,11 @@ export default {
   },
   data () {
     return {
+    }
+  },
+  methods: {
+    onEditLocation () {
+      this.$emit('on-edit-location', this.locationData)
     }
   }
 }

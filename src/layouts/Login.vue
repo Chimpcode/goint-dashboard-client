@@ -21,7 +21,7 @@
                 <v-text-field
                   name="password"
                   label="Password"
-                  id="email"
+                  id="password"
                   :append-icon="pass_v ? 'visibility' : 'visibility_off'"
                   :append-icon-cb="() => (pass_v = !pass_v)"
                   :type="pass_v ? 'password' : 'text'"
@@ -36,7 +36,7 @@
       </v-flex>
       <v-flex xs12 sm7>
         <div class="l-side-content">
-          
+
         </div>
       </v-flex>
     </v-layout>
@@ -102,7 +102,7 @@ html, body, #app, #login
 @media only screen and (max-width: 600px)
     .translate-middle
       transform: translateY(0%)
-	
+
 @media only screen and (max-height: 700px)
     .translate-middle
       transform: translateY(0%)

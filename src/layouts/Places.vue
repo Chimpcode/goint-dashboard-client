@@ -2,13 +2,13 @@
   <div id="places">
     <v-layout row wrap>
       <v-flex xs6 sm4>
-        <div 
+        <div
           class="ma-2 pa-2">
           <span class="title-header">Puntos de ubicacion</span>
         </div>
       </v-flex>
       <v-flex xs6 sm4>
-        <div 
+        <div
           class="ma-2 pa-2">
           <span class="title-header">Tiendas</span>
         </div>
@@ -24,8 +24,9 @@
       <v-flex xs6 sm4 class="overflowy">
         <location-card
           class="ma-2"
-          :location-data="location" 
-          v-for="(location, i) in locations" 
+          :location-data="location"
+          @on-edit-location="editLocation"
+          v-for="(location, i) in locations"
           :key="i"
           />
         <new-card
@@ -34,10 +35,11 @@
           @on-open-form="openForm"/>
       </v-flex>
       <v-flex xs6 sm4 class="overflowy">
-        <place-card 
+        <place-card
         class="ma-2"
-        :place-data="store" 
-        v-for="(store, i) in stores" 
+        :place-data="store"
+        v-for="(store, i) in stores"
+        @on-edit-store="editStore"
         :key="i"/>
         <new-card
           class="ma-2"
@@ -45,10 +47,11 @@
           @on-open-form="openForm"/>
       </v-flex>
       <v-flex xs6 sm4 class="overflowy">
-        <cluster-card 
+        <cluster-card
         class="ma-2"
-        :cluster-data="group" 
-        v-for="(group, i) in groups" 
+        :cluster-data="group"
+        @on-edit-cluster="editCluster"
+        v-for="(group, i) in groups"
         :key="i"/>
         <new-card
           class="ma-2"
@@ -56,8 +59,9 @@
           @on-open-form="openForm"/>
       </v-flex>
     </v-layout>
-    <LocationForm 
+    <LocationForm
       :kind-form="openFormTrigger"
+      :editData="editData"
       @on-close-dialog="onCloseLocationForm"
       @on-create-location="onCreateLocation"
       @on-create-cluster="onCreateCluster"
@@ -80,15 +84,11 @@ export default {
   },
   data () {
     return {
+      editData: undefined,
       openFormTrigger: '',
       locations: [
         { position: {lat: -11.891670, lng: -77.044149}, address: 'AURB. ADLksdlka ASDLK 343', id: 'place 1', createdAt: '14/2/17' },
-        { position: {lat: -11.885330, lng: -77.058117}, address: '234. ADLksdlka ASDLK 343', id: 'place 2', createdAt: '14/2/17' },
-        { position: {lat: -11.900784, lng: -77.038151}, address: '5464. ADLksdlka ASDLK 343', id: 'place 3', createdAt: '14/2/17' },
-        { position: {lat: -11.893948, lng: -77.043290}, address: 'asd. ADLksdlka ASDLK 343', id: 'place 4', createdAt: '14/2/17' },
-        { position: {lat: -11.893948, lng: -77.043290}, address: '67879. ADLksdlka ASDLK 343', id: 'place 4', createdAt: '14/2/17' },
-        { position: {lat: -11.893948, lng: -77.043290}, address: '789789. ADLksdlka ASDLK 343', id: 'place 4', createdAt: '14/2/17' },
-        { position: {lat: -11.893948, lng: -77.043290}, address: '4354. ADLksdlka ASDLK 343', id: 'place 4', createdAt: '14/2/17' }
+        { position: {lat: -11.885330, lng: -77.058117}, address: '234. ADLksdlka ASDLK 343', id: 'place 2', createdAt: '14/2/17' }
       ],
       stores: [
         { positions: [], name: 'Tienda 1', description: 'ABSDKJASJKDSD', coupons: 12, createdAt: '14/2/17' },
@@ -103,8 +103,21 @@ export default {
     }
   },
   methods: {
+    editCluster (clusterData) {
+      this.openFormTrigger = 'sector'
+      this.editData = clusterData
+    },
+    editStore (storeData) {
+      this.openFormTrigger = 'tienda'
+      this.editData = storeData
+    },
+    editLocation (storeLocation) {
+      this.openFormTrigger = 'ubicacion'
+      this.editData = storeLocation
+    },
     openForm: function (kindForm) {
       // console.log('click places', kindForm)
+      this.editData = undefined
       this.openFormTrigger = kindForm
     },
     onCloseLocationForm: function (closeValue) {

@@ -9,11 +9,11 @@ export default {
   name: 'app',
   created () {
     // this.$graphito.printTransport()
-    this.$graphito.call_query('fetchAllUsers').then(
-      result => {
-        console.log('app.vue', result)
-      }
-    )
+    // this.$graphito.call_query('fetchAllUsers').then(
+    //   result => {
+    //     console.log('app.vue', result)
+    //   }
+    // )
   }
 }
 </script>

@@ -24,7 +24,8 @@
       </v-tooltip>
       <v-tooltip bottom>
         <v-btn flat icon color="primary"
-        class="" slot="activator">
+               class="" slot="activator"
+               @click.native.stop="onEditStore">
           <v-icon>mode_edit</v-icon>
         </v-btn>
         <span>Editar?</span>
@@ -42,13 +43,16 @@ export default {
   methods: {
     drag: function (ev) {
       ev.dataTransfer.setData('Text', ev.target.id)
+    },
+    onEditStore () {
+      this.$emit('on-edit-store', this.placeData)
     }
   }
 }
 </script>
 
 <style lang="stylus">
-  
+
 .created-at
   font-size 9px
 </style>

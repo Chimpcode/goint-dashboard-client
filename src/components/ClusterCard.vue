@@ -21,7 +21,7 @@
           <span>Eliminar Ubicacion?</span>
       </v-tooltip>
       <v-tooltip bottom>
-        <v-btn flat icon color="primary"
+        <v-btn flat icon color="primary" @click.native.stop="editClusterData"
         class="" slot="activator">
           <v-icon>mode_edit</v-icon>
         </v-btn>
@@ -36,6 +36,11 @@ export default {
   name: 'ClusterCard',
   props: {
     clusterData: Object
+  },
+  methods: {
+    editClusterData () {
+      this.$emit('on-edit-cluster', this.clusterData)
+    }
   }
 }
 </script>

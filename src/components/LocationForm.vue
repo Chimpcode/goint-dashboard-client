@@ -9,7 +9,7 @@
         </v-card-text>
 
         <template v-if="kindForm === 'ubicacion'">
-          <v-card-title class="title mb-4"> Agregar Ubicacion &nbsp;<span class="green--text">{{infomessage}}</span></v-card-title>
+          <v-card-title class="title mb-4"> {{ editData === undefined ? 'Agregar' : 'Editar' }} Ubicacion &nbsp;<span class="green--text">{{infomessage}}</span></v-card-title>
           <gmap-map
             :center="locationForm.position"
             :zoom="13"
@@ -28,7 +28,7 @@
             <gmap-marker
               :position="locationForm.position"
               :clickable="true"
-              :draggable="true"              
+              :draggable="true"
               @click="center=locationForm.position"
               @position_changed="updateMarker(locationForm, 'position', $event)"
             ></gmap-marker>
@@ -44,7 +44,8 @@
             <v-tooltip bottom>
               <v-btn flat color="primary"
               class="" slot="activator" @click.native.stop="createNewLocation">
-                <v-icon>add</v-icon> Crear
+                <v-icon>{{ editData === undefined ? 'add' : 'edit' }}</v-icon>
+                {{ editData === undefined ? 'Crear' : 'Editar' }}
               </v-btn>
               <span>Crear?</span>
             </v-tooltip>
@@ -52,7 +53,7 @@
         </template>
 
         <template v-if="kindForm === 'tienda'">
-          <v-card-title class="title"> Agregar Tienda &nbsp;<span class="green--text">{{infomessage}}</span></v-card-title>
+          <v-card-title class="title"> {{ editData === undefined ? 'Agregar' : 'Editar' }} Tienda &nbsp;<span class="green--text">{{infomessage}}</span></v-card-title>
           <v-card-text>
             <v-text-field v-model="tiendaForm.name" label="Nombre" name="tiendaName"/>
             <v-text-field v-model="tiendaForm.description" label="Descripcion" name="tiendaDescription"/>
@@ -72,7 +73,8 @@
             <v-tooltip bottom>
               <v-btn flat color="primary"
               class="" slot="activator" @click.native.stop="createNewStore">
-                <v-icon>add</v-icon> Crear
+                <v-icon>{{ editData === undefined ? 'add' : 'edit' }}</v-icon>
+                {{ editData === undefined ? 'Crear' : 'Editar' }}
               </v-btn>
               <span>Crear?</span>
             </v-tooltip>
@@ -81,7 +83,7 @@
 
 
         <template v-if="kindForm === 'sector'">
-          <v-card-title class="title"> Agregar Sector &nbsp;<span class="green--text">{{infomessage}}</span></v-card-title>
+          <v-card-title class="title"> {{ editData === undefined ? 'Agregar' : 'Editar' }} Sector &nbsp;<span class="green--text">{{infomessage}}</span></v-card-title>
           <v-card-text>
             <v-text-field v-model="sectorForm.name" label="Nombre" name="sectorName"/>
             <v-select
@@ -97,17 +99,16 @@
           </v-card-text>
           <v-card-actions class="roboto">
             <v-spacer/>
-            <v-tooltip bottom>
-              <v-btn flat color="primary"
-              class="" slot="activator" @click.native.stop="createNewCluster">
-                <v-icon>add</v-icon> Crear
-              </v-btn>
-              <span>Crear?</span>
-            </v-tooltip>
+
+            <v-btn flat color="primary"
+                   class="" @click.native.stop="createNewCluster">
+              <v-icon>{{ editData === undefined ? 'add' : 'edit' }}</v-icon>
+              {{ editData === undefined ? 'Crear' : 'Editar' }}
+            </v-btn>
           </v-card-actions>
         </template>
 
-        
+
       </v-card>
     </v-dialog>
   </div>
@@ -117,7 +118,8 @@
 export default {
   name: 'LocationForm',
   props: {
-    kindForm: String
+    kindForm: String,
+    editData: { type: Object, default: undefined }
   },
   computed: {
     isOpen: {
@@ -131,6 +133,33 @@ export default {
       set: function (newValue) {
         return newValue
       }
+    },
+    sectorForm: {
+      get: function () {
+        if (this.editData === undefined) {
+          return { name: '' }
+        } else {
+          return this.editData
+        }
+      }
+    },
+    tiendaForm: {
+      get: function () {
+        if (this.editData === undefined) {
+          return { name: '', description: '' }
+        } else {
+          return this.editData
+        }
+      }
+    },
+    locationForm: {
+      get: function () {
+        if (this.editData === undefined) {
+          return { address: '', position: {lat: -12.122369, lng: -77.030339} }
+        } else {
+          return this.editData
+        }
+      }
     }
   },
   data () {
@@ -142,17 +171,17 @@ export default {
         tienda: '40%',
         ubicacion: '85%'
       },
-      sectorForm: {
-        name: ''
-      },
-      tiendaForm: {
-        name: '',
-        description: ''
-      },
-      locationForm: {
-        address: '',
-        position: {lat: -12.122369, lng: -77.030339}
-      },
+      // sectorForm: {
+      //   name: ''
+      // },
+      // tiendaForm: {
+      //   name: '',
+      //   description: ''
+      // },
+      // locationForm: {
+      //   address: '',
+      //   position: {lat: -12.122369, lng: -77.030339}
+      // },
       // these are goint to be fetched
       locations: [
         { position: {lat: -11.891670, lng: -77.044149}, address: 'AURB 343', id: '1' },
@@ -171,25 +200,33 @@ export default {
     closeDialog: function () {
       this.$emit('on-close-dialog', false)
       this.infomessage = ''
-      // cluster
-      this.sectorForm.name = ''
-      // store
-      this.tiendaForm.name = ''
-      this.tiendaForm.description = ''
-      // location
-      this.locationForm.address = ''
+      if (this.editData === undefined) {
+        // cluster
+        this.sectorForm.name = ''
+        // store
+        this.tiendaForm.name = ''
+        this.tiendaForm.description = ''
+        // location
+        this.locationForm.address = ''
+      }
     },
     createNewCluster: function () {
-      this.infomessage = 'Nuevo sector ha sido creado'
-      this.$emit('on-create-cluster', this.sectorForm)
+      if (this.editData === undefined) {
+        this.infomessage = 'Nuevo sector ha sido creado'
+        this.$emit('on-create-cluster', this.sectorForm)
+      }
     },
     createNewStore: function () {
-      this.infomessage = 'Nueva tienda ha sido creada'
-      this.$emit('on-create-store', this.tiendaForm)
+      if (this.editData === undefined) {
+        this.infomessage = 'Nueva tienda ha sido creada'
+        this.$emit('on-create-store', this.tiendaForm)
+      }
     },
     createNewLocation: function () {
-      this.infomessage = 'Nueva ubicacion ha sido creada'
-      this.$emit('on-create-location', this.locationForm)
+      if (this.editData === undefined) {
+        this.infomessage = 'Nueva ubicacion ha sido creada'
+        this.$emit('on-create-location', this.locationForm)
+      }
     },
     updateMarker: function (object, field, event) {
       if (field === 'position') {
