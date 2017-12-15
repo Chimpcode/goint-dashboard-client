@@ -1,7 +1,7 @@
 <template>
   <v-card light>
     <div :class="[ 'image-content', color]">
-        
+
     </div>
     <div class="info-content">
       <v-card-title primary-title>
@@ -15,7 +15,7 @@
       <v-card-actions class="roboto">
         <v-tooltip bottom>
             <v-btn flat color="primary" slot="activator">
-            <v-icon>local_activity</v-icon> &nbsp; {{promoData.availableCoupons}}
+            <v-icon>local_activity</v-icon> &nbsp; {{promoData.stock}}
             </v-btn>
             <span>Cupones restantes</span>
         </v-tooltip>
@@ -24,10 +24,10 @@
             <v-icon>event</v-icon> &nbsp; {{promoData.finishDate}}
             </v-btn>
             <span>Fecha de Vencimiento</span>
-        </v-tooltip>  
+        </v-tooltip>
         <v-spacer/>
         <v-btn flat color="primary" @click.native.stop="onEditMode">EDITAR</v-btn>
-            
+
         <v-dialog v-model="deleteDialog" max-width="500px">
           <v-btn flat color="primary" slot="activator">Eliminar</v-btn>
           <v-card>
@@ -84,6 +84,6 @@ export default {
   position absolute
   top 0px
   width 200px
-  height 166.5px
+  height 100%
   left 0px
 </style>

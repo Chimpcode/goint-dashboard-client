@@ -9,7 +9,10 @@ import GraphPlugin from 'graphito'
 import graphito from './graphrecipes'
 
 Vue.config.productionTip = false
-Vue.use(GraphPlugin, { url: 'http://13.90.253.208:9300/api/v1/u' })
+Vue.use(GraphPlugin, {
+  // url: 'http://13.90.253.208:9300/api/v1/u'
+  url: 'http://13.90.253.208:60000/simple/v1/cjay8qqaf00040138wrmhgryu'
+})
 
 Vue.use(VueGoogleMaps, {
   load: {

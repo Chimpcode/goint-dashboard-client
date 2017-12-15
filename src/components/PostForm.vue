@@ -13,10 +13,10 @@
               </v-flex>
           </div>
         </v-flex>
-          
+
         <v-flex xs12>
-          <v-text-field 
-            label="nombre" 
+          <v-text-field
+            label="nombre"
             name="title"
             v-model="postEdit.title"
             >
@@ -27,8 +27,9 @@
             name="cupones"
             label="Capacidad Cupones"
             single-line
+            type="number"
             prepend-icon="local_activity"
-            v-model="postEdit.availableCoupons"
+            v-model.number="postEdit.stock"
           ></v-text-field>
         </v-flex>
         <v-flex xs4 offset-xs1>
@@ -75,7 +76,7 @@
         </v-flex>
 
         <v-flex xs12>
-          <v-text-field 
+          <v-text-field
             multi-line
             :rows="2"
             label="descripcion"
@@ -83,15 +84,16 @@
             v-model="postEdit.description">
           </v-text-field>
         </v-flex>
-          
+
         <v-flex xs12 class="text-xs-right">
           <v-btn color="primary"
+                 :disabled="isDisabledToCreate"
             @click.native.stop="createOrUpdatePost">
             {{ isNew ? 'CREAR' : 'EDITAR' }}
           </v-btn>
         </v-flex>
       </v-layout>
-    </v-flex> 
+    </v-flex>
 
   </v-layout>
 </template>
@@ -107,6 +109,7 @@ export default {
   },
   data () {
     return {
+      isDisabledToCreate: false,
       infomessage: '',
       location_items: [
         { label: 'ZONA 1', id: '1' },
@@ -120,15 +123,36 @@ export default {
   methods: {
     createOrUpdatePost: function () {
       // test
+      this.isDisabledToCreate = true
+
       if (this.postEdit.createdAt === undefined) {
         this.postEdit.createdAt = '13/13/13'
       }
       if (this.isNew) {
-        this.infomessage = 'Promocion creada'
-        this.$emit('on-create-post', this.postEdit)
-        return true
+        let self = this
+        this.$graphito.call_mutation('createPost',
+          {
+            description: self.postEdit.description,
+            by: 'Someone',
+            title: self.postEdit.title,
+            stock: self.postEdit.stock
+          }
+        ).then(res => {
+          this.infomessage = 'Promocion creada'
+          this.$emit('on-create-post', res.createPost)
+          setTimeout(() => {
+            self.isDisabledToCreate = false
+          }, 4000)
+          return true
+        }, err => {
+          console.log(err)
+        })
+      } else {
+        // let self = this
+        this.$graphito.call_mutation('')
+        this.infomessage = 'Promocion editada'
+        this.$emit('on-edit-post', true)
       }
-      this.infomessage = 'Promocion editada'
     }
   },
   computed: {

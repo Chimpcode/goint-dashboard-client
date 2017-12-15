@@ -10,28 +10,27 @@
           id="search"
           @click="active_state=states[0]"
         ></v-text-field>
-      </v-flex> 
+      </v-flex>
       <v-flex class="mt-2 ml-3" xs6>
-        
-        <v-btn flat color="dark" 
-              :class="active_state === states[0] ? 'red--text':''" 
+
+        <v-btn flat color="dark"
+              :class="active_state === states[0] ? 'red--text':''"
                @click="active_state=states[0]">
           <v-icon>view_list</v-icon>
           &nbsp;Promociones
         </v-btn>
 
-        <v-btn flat color="dark" 
-              :class="active_state === states[1] || active_state === states[2] ? 'red--text':''" 
+        <v-btn flat color="dark"
+              :class="active_state === states[1] || active_state === states[2] ? 'red--text':''"
                @click="onOpenEditAddPostView">
           <v-icon>{{active_state === states[2] ? 'mode_edit': 'note_add'}}</v-icon>
           &nbsp;{{active_state === states[2] ? 'Editar promocion': 'Nueva promocion'}}
         </v-btn>
-
         <!-- <v-btn flat color="dark" >
           <v-icon>delete</v-icon>
           &nbsp;Borrar
         </v-btn> -->
-      </v-flex> 
+      </v-flex>
     </v-layout>
 
     <!-- CARDS CONTENT -->
@@ -39,15 +38,15 @@
       <v-flex xs12>
 
         <v-container fluid grid-list-md>
-          
+
           <!-- LIST CARDS -->
           <v-layout row wrap v-if="active_state==='list'">
             <v-flex xs12 sm12 md9 v-for="(promo, index) in promociones" :key="index">
-              <promo-card 
-                :color="colorvariants[index%5]" 
+              <promo-card
+                :color="colorvariants[index%5]"
                 :promo-data="promo"
                 @on-edit-mode="postObjToEdit = promo; active_state=states[2]"/>
-            </v-flex> 
+            </v-flex>
           </v-layout>
 
           <!-- ADD / EDIT VIEW -->
@@ -55,7 +54,8 @@
             v-if="active_state==='add' || active_state==='edit'"
             :is-new="active_state===states[1]? true : false"
             :postObj="postObjToEdit"
-            @on-create-update-post="onCreateUpdatePost">
+            @on-create-post="onCreateUpdatePost"
+            @on-edit-post="onCreateUpdatePost">
           </post-form>
         </v-container>
       </v-flex>
@@ -82,14 +82,30 @@ export default {
       }
     },
     onCreateUpdatePost: function (newPost) {
-      this.promociones.push({
-        createdAt: newPost.createdAt,
-        title: newPost.title,
-        description: newPost.description,
-        availableCoupons: newPost.availableCoupons,
-        finishDate: newPost.finishDate
+      // this.promociones.push({
+      //   createdAt: newPost.createdAt,
+      //   title: newPost.title,
+      //   description: newPost.description,
+      //   availableCoupons: newPost.availableCoupons,
+      //   finishDate: newPost.finishDate
+      // })
+      // console.log('onCreateUpdatePost')
+
+      this.fetchDependencies().then(done => {
+        this.active_state = 'list'
+      }, err => {
+        console.log(err)
       })
-      this.active_state = 'list'
+    },
+    fetchDependencies () {
+      return new Promise((resolve, reject) => {
+        this.$graphito.call_query('fetchAllPosts').then(res => {
+          this.promociones = res.allPosts
+          resolve(true)
+        }).catch(err => {
+          reject(err)
+        })
+      })
     }
   },
   data () {
@@ -105,24 +121,24 @@ export default {
       timepicker_date: null,
       timepicker_menu: false,
       promociones: [
-        {
-          createdAt: '12/04/18',
-          title: 'PromoA',
-          description: 'Lorem Ipsum ....',
-          availableCoupons: 13,
-          finishDate: '12/18',
-          location: '1'
-        }, {
-          createdAt: '12/04/18',
-          title: 'PromoA',
-          description: 'Lorem Ipsum ....',
-          availableCoupons: 13,
-          finishDate: '12/18',
-          location: '2'
-        }
+        // {
+        //   createdAt: '12/04/18',
+        //   title: 'PromoA',
+        //   description: 'Lorem Ipsum ....',
+        //   availableCoupons: 13,
+        //   finishDate: '12/18',
+        //   location: '1'
+        // }
       ],
       colorvariants: ['teal', 'pink', 'blue', 'red', 'green']
     }
+  },
+  created () {
+    this.fetchDependencies().then(done => {
+      console.log(done)
+    }, err => {
+      console.log(err)
+    })
   }
 }
 </script>
