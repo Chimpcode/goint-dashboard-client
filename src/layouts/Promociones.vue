@@ -45,7 +45,8 @@
               <promo-card
                 :color="colorvariants[index%5]"
                 :promo-data="promo"
-                @on-edit-mode="postObjToEdit = promo; active_state=states[2]"/>
+                @on-edit-mode="postObjToEdit = promo; active_state=states[2]"
+                @on-delete="onCreateUpdatePost"/>
             </v-flex>
           </v-layout>
 
@@ -66,6 +67,7 @@
 <script>
 import PromoCard from '../components/PromoCard'
 import PostForm from '../components/PostForm'
+import { EventBus } from '../event_bus'
 
 export default {
   name: 'Promociones',
@@ -91,9 +93,12 @@ export default {
       // })
       // console.log('onCreateUpdatePost')
 
+      EventBus.$emit('is-short-loading', true)
       this.fetchDependencies().then(done => {
+        EventBus.$emit('is-short-loading', false)
         this.active_state = 'list'
       }, err => {
+        EventBus.$emit('is-short-loading', false)
         console.log(err)
       })
     },
@@ -134,9 +139,12 @@ export default {
     }
   },
   created () {
+    EventBus.$emit('is-loading', true)
     this.fetchDependencies().then(done => {
+      EventBus.$emit('is-loading', false)
       console.log(done)
     }, err => {
+      EventBus.$emit('is-loading', false)
       console.log(err)
     })
   }

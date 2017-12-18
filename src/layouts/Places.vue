@@ -145,7 +145,8 @@ export default {
         position: newLocation.position
       })
     }
-
+  },
+  created () {
   }
 }
 </script>

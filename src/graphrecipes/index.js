@@ -36,6 +36,7 @@ export default {
         description
         stock
         title
+        image
         by
       }
     }
@@ -51,6 +52,15 @@ export default {
         title
         createdAt
         by
+      }
+    }
+    `,
+    deletePost: `
+    {
+      deletePost(
+        [request]
+      ) {
+        id
       }
     }
     `

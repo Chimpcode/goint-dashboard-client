@@ -135,7 +135,8 @@ export default {
             description: self.postEdit.description,
             by: 'Someone',
             title: self.postEdit.title,
-            stock: self.postEdit.stock
+            stock: self.postEdit.stock,
+            image: 'http://13.90.253.208:9300/api/v1/i/nombre'
           }
         ).then(res => {
           this.infomessage = 'Promocion creada'
@@ -148,10 +149,28 @@ export default {
           console.log(err)
         })
       } else {
-        // let self = this
-        this.$graphito.call_mutation('')
-        this.infomessage = 'Promocion editada'
-        this.$emit('on-edit-post', true)
+        let self = this
+        // console.log(this.postEdit)
+        // console.log(this.postObj)
+        this.$graphito.call_mutation('updatePost',
+          {
+            id: self.postObj.id,
+            description: self.postEdit.description,
+            by: 'Someone',
+            title: self.postEdit.title,
+            stock: self.postEdit.stock
+          }
+        ).then(res => {
+          this.infomessage = 'Promocion editada'
+          this.$emit('on-edit-post', true)
+
+          setTimeout(() => {
+            self.isDisabledToCreate = false
+          }, 4000)
+          return true
+        }, err => {
+          console.log(err)
+        })
       }
     }
   },

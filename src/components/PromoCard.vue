@@ -1,7 +1,7 @@
 <template>
   <v-card light>
     <div :class="[ 'image-content', color]">
-
+      <img :src="promoData.image" width="100%" height="100%"/>
     </div>
     <div class="info-content">
       <v-card-title primary-title>
@@ -68,6 +68,14 @@ export default {
       this.$emit('on-edit-mode', true)
     },
     deletePost: function () {
+      this.$graphito.call_mutation('deletePost', { id: this.promoData.id })
+        .then(res => {
+          this.$emit('on-delete', true)
+          this.deleteDialog = false
+        }, err => {
+          console.log(err)
+          this.deleteDialog = false
+        })
     }
   }
 }

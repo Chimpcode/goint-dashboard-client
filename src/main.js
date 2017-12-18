@@ -7,6 +7,10 @@ import Vuetify from 'vuetify'
 import * as VueGoogleMaps from 'vue2-google-maps'
 import GraphPlugin from 'graphito'
 import graphito from './graphrecipes'
+import VueResource from 'vue-resource'
+
+Vue.use(VueResource)
+Vue.http.options.root = 'http://13.90.253.208:9300/api/v1'
 
 Vue.config.productionTip = false
 Vue.use(GraphPlugin, {
