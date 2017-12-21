@@ -11,26 +11,16 @@
         <template v-if="kindForm === 'ubicacion'">
           <v-card-title class="title mb-4"> {{ editData === undefined ? 'Agregar' : 'Editar' }} Ubicacion &nbsp;<span class="green--text">{{infomessage}}</span></v-card-title>
           <gmap-map
-            :center="locationForm.position"
+            :center="center"
             :zoom="13"
             map-type-id="terrain"
             style="width: 100%; height: 300px"
           >
             <gmap-marker
-              :key="index"
-              v-for="(m, index) in locations"
-              :position="m.position"
-              :clickable="true"
-              :draggable="m.address === ''"
-              @click="center=m.position"
-            ></gmap-marker>
-
-            <gmap-marker
               :position="locationForm.position"
               :clickable="true"
               :draggable="true"
-              @click="center=locationForm.position"
-              @position_changed="updateMarker(locationForm, 'position', $event)"
+              @position_changed="updateMarker(locationForm, $event)"
             ></gmap-marker>
           </gmap-map>
           <v-card-text>
@@ -64,7 +54,7 @@
               chips
               autocomplete
               label="Inserte ubicaciones"
-              item-value="address"
+              item-value="id"
               item-text="address"
             />
           </v-card-text>
@@ -88,12 +78,12 @@
             <v-text-field v-model="sectorForm.name" label="Nombre" name="sectorName"/>
             <v-select
               :items="stores"
-              v-model="sectorForm.tiendas"
+              v-model="sectorForm.stores"
               multiple
               chips
               autocomplete
               label="Inserte tiendas"
-              item-value="name"
+              item-value="id"
               item-text="name"
             />
           </v-card-text>
@@ -115,11 +105,15 @@
 </template>
 
 <script>
+import { EventBus } from '../event_bus'
+
 export default {
   name: 'LocationForm',
   props: {
     kindForm: String,
-    editData: { type: Object, default: undefined }
+    editData: { type: Object, default: undefined },
+    locations: Array,
+    stores: Array
   },
   computed: {
     isOpen: {
@@ -155,7 +149,7 @@ export default {
     locationForm: {
       get: function () {
         if (this.editData === undefined) {
-          return { address: '', position: {lat: -12.122369, lng: -77.030339} }
+          return { address: '', position: {lat: -12.117992, lng: -77.030646} }
         } else {
           return this.editData
         }
@@ -165,12 +159,12 @@ export default {
   data () {
     return {
       infomessage: '',
-      center: { lat: -11.890211, lng: -77.043939 },
+      center: { lat: -12.117992, lng: -77.030646 },
       typeDialog: {
         sector: '40%',
         tienda: '40%',
         ubicacion: '85%'
-      },
+      }
       // sectorForm: {
       //   name: ''
       // },
@@ -183,17 +177,8 @@ export default {
       //   position: {lat: -12.122369, lng: -77.030339}
       // },
       // these are goint to be fetched
-      locations: [
-        { position: {lat: -11.891670, lng: -77.044149}, address: 'AURB 343', id: '1' },
-        { position: {lat: -11.885330, lng: -77.058117}, address: '123. ADLksdlka ASDLK 343', id: '2' },
-        { position: {lat: -11.900784, lng: -77.038151}, address: '4567. ADLksdlka ASDLK 343', id: '3' },
-        { position: {lat: -11.893948, lng: -77.043290}, address: '987978. ADLksdlka ASDLK 343', id: '4' }
-      ],
-      stores: [
-        { positions: [], name: 'Tienda 1', description: 'ABSDKJASJKDSD', coupons: 12, createdAt: '14/2/17' },
-        { positions: [], name: 'Tienda 2', description: 'ABSDKJASJKDSD', coupons: 12, createdAt: '14/2/17' },
-        { positions: [], name: 'Tienda 3', description: 'ABSDKJASJKDSD', coupons: 12, createdAt: '14/2/17' }
-      ]
+      // locations: [],
+      // stores: []
     }
   },
   methods: {
@@ -211,29 +196,113 @@ export default {
       }
     },
     createNewCluster: function () {
+      let self = this
       if (this.editData === undefined) {
-        this.infomessage = 'Nuevo sector ha sido creado'
-        this.$emit('on-create-cluster', this.sectorForm)
+        EventBus.$emit('is-short-loading', true)
+
+        console.log(self.sectorForm.stores)
+        self.$graphito.call_mutation('createSector',
+          {
+            name: self.sectorForm.name,
+            storesIds: self.sectorForm.stores
+          }
+        ).then(res => {
+          EventBus.$emit('is-short-loading', false)
+          EventBus.$emit('snackbar-message', 'Dato creado')
+          this.infomessage = 'Nuevo sector ha sido creado'
+
+          console.log(res)
+          this.sectorForm.id = res.createSector.id
+          this.$emit('on-create-cluster', this.sectorForm)
+        }, err => {
+          console.log(err)
+          EventBus.$emit('is-short-loading', false)
+          // EventBus.$emit('snackbar-message', err)
+        })
+      } else {
+        // let self = this
+        // EventBus.$emit('is-short-loading', true)
+        // if (this.kindForm === 'sector') {
+        //   this.$graphito.call_mutation('updateSector', {
+        //     id: self.editData.id,
+        //     name: self.editData.name,
+        //     stores: self.editData.stores
+        //   })
+        //   .then(res => {
+        //     this.infomessage = 'Sector editado'
+        //     EventBus.$emit('is-short-loading', false)
+        //     this.$emit('refresh-data', true)
+        //   }).catch(err => {
+        //     console.log(err)
+        //     EventBus.$emit('is-short-loading', false)
+        //   })
+        // }
       }
     },
     createNewStore: function () {
+      let self = this
       if (this.editData === undefined) {
-        this.infomessage = 'Nueva tienda ha sido creada'
-        this.$emit('on-create-store', this.tiendaForm)
+        EventBus.$emit('is-short-loading', true)
+
+        self.$graphito.call_mutation('createStore',
+          {
+            name: self.tiendaForm.name,
+            description: self.tiendaForm.description,
+            locationsIds: self.tiendaForm.positions
+          }
+        ).then(res => {
+          EventBus.$emit('is-short-loading', false)
+          EventBus.$emit('snackbar-message', 'Dato creado')
+          this.infomessage = 'Nueva tienda ha sido creada'
+
+          this.tiendaForm.id = res.createStore.id
+          this.$emit('on-create-store', this.tiendaForm)
+        }, err => {
+          console.log(err)
+          EventBus.$emit('is-short-loading', false)
+          // EventBus.$emit('snackbar-message', err)
+        })
+      } else {
+        EventBus.$emit('is-short-loading', true)
+        if (this.kindForm === 'tienda') {
+
+        }
       }
     },
     createNewLocation: function () {
+      let self = this
       if (this.editData === undefined) {
-        this.infomessage = 'Nueva ubicacion ha sido creada'
-        this.$emit('on-create-location', this.locationForm)
+        EventBus.$emit('is-short-loading', true)
+
+        self.$graphito.call_mutation('createLocation',
+          {
+            longitude: self.locationForm.position.lng,
+            latitude: self.locationForm.position.lat,
+            address: self.locationForm.address
+          }
+        ).then(res => {
+          EventBus.$emit('is-short-loading', false)
+          // EventBus.$emit('snackbar-message', 'Dato creado')
+          this.infomessage = 'Nueva ubicacion ha sido creada'
+
+          this.locationForm.id = res.createLocation.id
+          this.$emit('on-create-location', this.locationForm)
+        }, err => {
+          console.log(err)
+          EventBus.$emit('is-short-loading', false)
+          // EventBus.$emit('snackbar-message', err)
+        })
+      } else {
+        EventBus.$emit('is-short-loading', true)
+        if (this.kindForm === 'ubicacion') {
+
+        }
       }
     },
-    updateMarker: function (object, field, event) {
-      if (field === 'position') {
-        object.position = {
-          lat: event.lat(),
-          lng: event.lng()
-        }
+    updateMarker: function (object, event) {
+      object.position = {
+        lat: event.lat(),
+        lng: event.lng()
       }
     },
     handleLocationError: function (browserHasGeolocation) {

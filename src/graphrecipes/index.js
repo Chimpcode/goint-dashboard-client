@@ -23,6 +23,39 @@ export default {
         type
         updatedAt
       }
+    }`,
+    fetchAllLocations: `
+    {
+      allLocations {
+        latitude
+        longitude
+        address
+        id
+        createdAt
+      }
+    }`,
+    fetchAllStores: `
+    {
+      allStores{
+        locations{
+          id
+          address
+        }
+        id
+        name
+        description
+      }
+    }`,
+    fetchAllSectors: `
+    {
+      allSectors{
+        stores{
+          id
+          name
+        }
+        id
+        name
+      }
     }`
   },
   mutations: {
@@ -38,6 +71,33 @@ export default {
         title
         image
         by
+      }
+    }
+    `,
+    createLocation: `
+    {
+      createLocation(
+        [request]
+      ) {
+        id
+      }
+    }
+    `,
+    createStore: `
+    {
+      createStore(
+        [request]
+      ) {
+        id
+      }
+    }
+    `,
+    createSector: `
+    {
+      createSector(
+        [request]
+      ) {
+        id
       }
     }
     `,
@@ -61,6 +121,44 @@ export default {
         [request]
       ) {
         id
+      }
+    }
+    `,
+    deleteStore: `
+    {
+      deleteStore(
+        [request]
+      ) {
+        id
+      }
+    }
+    `,
+    deleteSector: `
+    {
+      deleteSector(
+        [request]
+      ) {
+        id
+      }
+    }
+    `,
+    deleteLocation: `
+    {
+      deleteLocation(
+        [request]
+      ) {
+        id
+      }
+    }
+    `,
+    updateSector: `
+    {
+      updateSector(
+        [request]
+      ) {
+        id
+        name
+        stores { id, name }
       }
     }
     `

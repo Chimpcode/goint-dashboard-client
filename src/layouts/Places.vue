@@ -26,6 +26,7 @@
           class="ma-2"
           :location-data="location"
           @on-edit-location="editLocation"
+          @refresh-data="refreshData"
           v-for="(location, i) in locations"
           :key="i"
           />
@@ -40,6 +41,7 @@
         :place-data="store"
         v-for="(store, i) in stores"
         @on-edit-store="editStore"
+        @refresh-data="refreshData"
         :key="i"/>
         <new-card
           class="ma-2"
@@ -51,6 +53,7 @@
         class="ma-2"
         :cluster-data="group"
         @on-edit-cluster="editCluster"
+        @refresh-data="refreshData"
         v-for="(group, i) in groups"
         :key="i"/>
         <new-card
@@ -62,6 +65,9 @@
     <LocationForm
       :kind-form="openFormTrigger"
       :editData="editData"
+      :locations="locations"
+      :stores="stores"
+      @refresh-data="refreshData"
       @on-close-dialog="onCloseLocationForm"
       @on-create-location="onCreateLocation"
       @on-create-cluster="onCreateCluster"
@@ -71,11 +77,12 @@
 </template>
 
 <script>
-import PlaceCard from '../components/PlaceCard'
+import PlaceCard from '../components/StoreCard'
 import LocationCard from '../components/LocationCard'
 import ClusterCard from '../components/ClusterCard'
 import NewCard from '../components/NewCard'
 import LocationForm from '../components/LocationForm'
+import { EventBus } from '../event_bus'
 
 export default {
   name: 'Places',
@@ -87,18 +94,10 @@ export default {
       editData: undefined,
       openFormTrigger: '',
       locations: [
-        { position: {lat: -11.891670, lng: -77.044149}, address: 'AURB. ADLksdlka ASDLK 343', id: 'place 1', createdAt: '14/2/17' },
-        { position: {lat: -11.885330, lng: -77.058117}, address: '234. ADLksdlka ASDLK 343', id: 'place 2', createdAt: '14/2/17' }
       ],
       stores: [
-        { positions: [], name: 'Tienda 1', description: 'ABSDKJASJKDSD', coupons: 12, createdAt: '14/2/17' },
-        { positions: [], name: 'Tienda 1', description: 'ABSDKJASJKDSD', coupons: 12, createdAt: '14/2/17' },
-        { positions: [], name: 'Tienda 1', description: 'ABSDKJASJKDSD', coupons: 12, createdAt: '14/2/17' }
       ],
       groups: [
-        { tiendas: [], name: 'Grupo A' },
-        { tiendas: [], name: 'Grupo A' },
-        { tiendas: [], name: 'Grupo A' }
       ]
     }
   },
@@ -126,27 +125,60 @@ export default {
     onCreateCluster: function (newCluster) {
       // console.log(newCluster)
       this.groups.push({
+        id: newCluster.id,
         name: newCluster.name,
-        tiendas: newCluster.tiendas
+        stores: newCluster.tiendas
       })
     },
     onCreateStore: function (newStore) {
       // console.log(newStore)
       this.stores.push({
+        id: newStore.id,
         name: newStore.name,
         description: newStore.description,
-        positions: newStore.positions
+        locations: newStore.positions
       })
     },
     onCreateLocation: function (newLocation) {
       // console.log(newLocation)
       this.locations.push({
+        id: newLocation.id,
         address: newLocation.address,
         position: newLocation.position
+      })
+    },
+    fetchDependencies () {
+      return new Promise((resolve, reject) => {
+        this.$graphito.call_query('fetchAllLocations')
+        .then(res => {
+          this.locations = res.allLocations.map(location => {
+            location.position = {}
+            location.position.lat = location.latitude
+            location.position.lng = location.longitude
+            return location
+          })
+          return this.$graphito.call_query('fetchAllStores')
+        }).then(res => {
+          this.stores = res.allStores
+          return this.$graphito.call_query('fetchAllSectors')
+        }).then(res => {
+          this.groups = res.allSectors
+          resolve(true)
+        }).catch(err => { reject(err) })
+      })
+    },
+    refreshData () {
+      EventBus.$emit('is-loading', true)
+      this.fetchDependencies().then(res => {
+        EventBus.$emit('is-loading', false)
+      }, err => {
+        console.log(err)
+        EventBus.$emit('is-loading', false)
       })
     }
   },
   created () {
+    this.refreshData()
   }
 }
 </script>

@@ -9,14 +9,15 @@
     </v-card-title>
     <v-card-text>
         <h5>Ubicaciones: </h5>
-        <div class="black--text" v-for="(location, i) in placeData.positions" :key="i">
-          <span>{{location}}</span>
+        <div class="black--text" v-for="(location, i) in placeData.locations" :key="i">
+          <span>{{location.address}}</span>
         </div>
     </v-card-text>
     <v-card-actions class="roboto">
       <v-spacer/>
       <v-tooltip bottom>
           <v-btn flat icon color="primary" slot="activator"
+                 @click.native.stop="deleteStoreFunc(placeData.id)"
           class="">
             <v-icon>delete</v-icon>
           </v-btn>
@@ -35,8 +36,10 @@
 </template>
 
 <script>
+import { EventBus } from '../event_bus'
+
 export default {
-  name: 'PlaceCard',
+  name: 'StoreCard',
   props: {
     placeData: Object
   },
@@ -46,6 +49,17 @@ export default {
     },
     onEditStore () {
       this.$emit('on-edit-store', this.placeData)
+    },
+    deleteStoreFunc (id) {
+      EventBus.$emit('is-shot-loading', true)
+      this.$graphito.call_mutation('deleteStore', { id: id })
+        .then(res => {
+          this.$emit('refresh-data', true)
+          EventBus.$emit('is-shot-loading', false)
+        }, err => {
+          console.log(err)
+          EventBus.$emit('is-shot-loading', false)
+        })
     }
   }
 }

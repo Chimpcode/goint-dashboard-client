@@ -110,7 +110,7 @@ body, html
   left 0
   width 100%
   height 100%
-  z-index 8
+  z-index 9998
   background rgba(0, 0, 0, 0.40)
 
 .loading-dialog
@@ -120,6 +120,6 @@ body, html
   transform translateX(-150px) translateY(-75px)
   width 300px
   height 150px
-  z-index 9
+  z-index 9999
   background #f7f7f8
 </style>

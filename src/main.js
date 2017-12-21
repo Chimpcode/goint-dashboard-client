@@ -15,7 +15,7 @@ Vue.http.options.root = 'http://13.90.253.208:9300/api/v1'
 Vue.config.productionTip = false
 Vue.use(GraphPlugin, {
   // url: 'http://13.90.253.208:9300/api/v1/u'
-  url: 'http://13.90.253.208:60000/simple/v1/cjay8qqaf00040138wrmhgryu'
+  url: 'http://13.90.253.208:60000/simple/v1/cjb5vhjxf002q01897ggfz3b3'
 })
 
 Vue.use(VueGoogleMaps, {

@@ -15,6 +15,7 @@
       <v-spacer/>
       <v-tooltip bottom>
           <v-btn flat icon color="primary" slot="activator"
+                 @click.native.stop="deleteLocation(locationData.id)"
           class="">
             <v-icon>delete</v-icon>
           </v-btn>
@@ -33,6 +34,8 @@
 </template>
 
 <script>
+import { EventBus } from '../event_bus'
+
 export default {
   name: 'LocationCard',
   props: {
@@ -45,6 +48,17 @@ export default {
   methods: {
     onEditLocation () {
       this.$emit('on-edit-location', this.locationData)
+    },
+    deleteLocation (id) {
+      EventBus.$emit('is-shot-loading', true)
+      this.$graphito.call_mutation('deleteLocation', { id: id })
+        .then(res => {
+          this.$emit('refresh-data', true)
+          EventBus.$emit('is-shot-loading', false)
+        }, err => {
+          console.log(err)
+          EventBus.$emit('is-shot-loading', false)
+        })
     }
   }
 }
