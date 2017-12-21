@@ -9,7 +9,6 @@ export default {
     fetchAllPosts: `
     {
       allPosts {
-        by
         id
         address
         title
@@ -70,7 +69,6 @@ export default {
         stock
         title
         image
-        by
       }
     }
     `,
@@ -111,7 +109,6 @@ export default {
         stock
         title
         createdAt
-        by
       }
     }
     `,

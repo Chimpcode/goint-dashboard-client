@@ -7,7 +7,7 @@
       <v-card-title primary-title>
       <div>
           <div class="created-at">{{promoData.createdAt}}</div>
-          <h3 class="headline mb-0 mt-2">{{promoData.title}} - {{location_items[promoData.location]}}</h3>
+          <h3 class="headline mb-0 mt-2">{{promoData.title}}</h3>
           <div>{{promoData.description}}
           </div>
       </div>

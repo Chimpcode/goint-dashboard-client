@@ -133,7 +133,7 @@ export default {
         this.$graphito.call_mutation('createPost',
           {
             description: self.postEdit.description,
-            by: 'Someone',
+            byId: 'cjbgrs3i101180189qwrhkjgj',
             title: self.postEdit.title,
             stock: self.postEdit.stock,
             image: 'http://13.90.253.208:9300/api/v1/i/nombre'
@@ -156,7 +156,7 @@ export default {
           {
             id: self.postObj.id,
             description: self.postEdit.description,
-            by: 'Someone',
+            byId: 'cjbgrs3i101180189qwrhkjgj',
             title: self.postEdit.title,
             stock: self.postEdit.stock
           }
