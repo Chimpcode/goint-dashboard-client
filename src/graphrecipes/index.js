@@ -158,6 +158,24 @@ export default {
         stores { id, name }
       }
     }
+    `,
+    updateStore: `
+    {
+      updateStore(
+        [request]
+      ) {
+        id
+      }
+    }
+    `,
+    updateLocation: `
+    {
+      updateLocation(
+        [request]
+      ) {
+        id
+      }
+    }
     `
   }
 }

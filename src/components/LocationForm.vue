@@ -49,7 +49,7 @@
             <v-text-field v-model="tiendaForm.description" label="Descripcion" name="tiendaDescription"/>
             <v-select
               :items="locations"
-              v-model="tiendaForm.positions"
+              v-model="tiendaForm.locations"
               multiple
               chips
               autocomplete
@@ -135,6 +135,10 @@ export default {
         } else {
           return this.editData
         }
+      },
+      set: function (value) {
+        this.editData.name = value.name
+        this.editData.stores = value.stores
       }
     },
     tiendaForm: {
@@ -220,23 +224,23 @@ export default {
           // EventBus.$emit('snackbar-message', err)
         })
       } else {
-        // let self = this
-        // EventBus.$emit('is-short-loading', true)
-        // if (this.kindForm === 'sector') {
-        //   this.$graphito.call_mutation('updateSector', {
-        //     id: self.editData.id,
-        //     name: self.editData.name,
-        //     stores: self.editData.stores
-        //   })
-        //   .then(res => {
-        //     this.infomessage = 'Sector editado'
-        //     EventBus.$emit('is-short-loading', false)
-        //     this.$emit('refresh-data', true)
-        //   }).catch(err => {
-        //     console.log(err)
-        //     EventBus.$emit('is-short-loading', false)
-        //   })
-        // }
+        let self = this
+        EventBus.$emit('is-short-loading', true)
+        if (this.kindForm === 'sector') {
+          this.$graphito.call_mutation('updateSector', {
+            id: self.editData.id,
+            name: self.editData.name,
+            storesIds: self.editData.stores
+          })
+          .then(res => {
+            this.infomessage = 'Sector editado'
+            EventBus.$emit('is-short-loading', false)
+            this.$emit('refresh-data', true)
+          }).catch(err => {
+            console.log(err)
+            EventBus.$emit('is-short-loading', false)
+          })
+        }
       }
     },
     createNewStore: function () {
@@ -263,9 +267,23 @@ export default {
           // EventBus.$emit('snackbar-message', err)
         })
       } else {
+        let self = this
         EventBus.$emit('is-short-loading', true)
         if (this.kindForm === 'tienda') {
-
+          this.$graphito.call_mutation('updateStore', {
+            id: self.editData.id,
+            name: self.editData.name,
+            description: self.editData.description,
+            locationsIds: self.editData.locations
+          })
+          .then(res => {
+            this.infomessage = 'Tienda editada'
+            EventBus.$emit('is-short-loading', false)
+            this.$emit('refresh-data', true)
+          }).catch(err => {
+            console.log(err)
+            EventBus.$emit('is-short-loading', false)
+          })
         }
       }
     },
@@ -293,9 +311,24 @@ export default {
           // EventBus.$emit('snackbar-message', err)
         })
       } else {
+        let self = this
+        // console.log(self.editData)
         EventBus.$emit('is-short-loading', true)
         if (this.kindForm === 'ubicacion') {
-
+          this.$graphito.call_mutation('updateLocation', {
+            id: self.editData.id,
+            address: self.editData.address,
+            longitude: self.editData.position.lng,
+            latitude: self.editData.position.lat
+          })
+          .then(res => {
+            this.infomessage = 'Localizacion editada'
+            EventBus.$emit('is-short-loading', false)
+            this.$emit('refresh-data', true)
+          }).catch(err => {
+            console.log(err)
+            EventBus.$emit('is-short-loading', false)
+          })
         }
       }
     },
