@@ -76,6 +76,16 @@
         </v-flex>
 
         <v-flex xs12>
+          <v-select
+            v-model="postEdit.pseudotags"
+            label="Agrega etiquetas"
+            multiple
+            tags
+            chips
+            :items="[]"
+          ></v-select>
+        </v-flex>
+        <v-flex xs12>
           <v-text-field
             multi-line
             :rows="2"
@@ -99,6 +109,7 @@
 </template>
 
 <script>
+
 export default {
   name: 'PostForm',
   props: {
@@ -123,11 +134,16 @@ export default {
   methods: {
     createOrUpdatePost: function () {
       // test
+      this.postEdit.tags = this.postEdit.pseudotags.join(',')
       this.isDisabledToCreate = true
 
       if (this.postEdit.createdAt === undefined) {
         this.postEdit.createdAt = '13/13/13'
       }
+      console.log(this.postEdit.finishDate)
+      console.log(new Date(this.postEdit.finishDate))
+      let expireAt = new Date(this.postEdit.finishDate).getTime()
+      console.log(expireAt)
       if (this.isNew) {
         let self = this
         this.$graphito.call_mutation('createPost',
@@ -136,6 +152,8 @@ export default {
             byId: 'cjbgrs3i101180189qwrhkjgj',
             title: self.postEdit.title,
             stock: self.postEdit.stock,
+            tags: self.postEdit.tags,
+            expireAt: expireAt,
             image: 'http://13.90.253.208:9300/api/v1/i/nombre'
           }
         ).then(res => {
@@ -158,7 +176,9 @@ export default {
             description: self.postEdit.description,
             byId: 'cjbgrs3i101180189qwrhkjgj',
             title: self.postEdit.title,
-            stock: self.postEdit.stock
+            stock: self.postEdit.stock,
+            expireAt: (new Date(self.postEdit.finishDate)).getMilliseconds(),
+            tags: self.postEdit.tags
           }
         ).then(res => {
           this.infomessage = 'Promocion editada'

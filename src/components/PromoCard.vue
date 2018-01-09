@@ -26,6 +26,7 @@
             <span>Fecha de Vencimiento</span>
         </v-tooltip>
         <v-spacer/>
+        <v-switch :hide-details="true" color="primary" :label="promoData.isActive?'Activo':'Desactivo'" v-model="promoData.isActive"></v-switch>
         <v-btn flat color="primary" @click.native.stop="onEditMode">EDITAR</v-btn>
 
         <v-dialog v-model="deleteDialog" max-width="500px">
