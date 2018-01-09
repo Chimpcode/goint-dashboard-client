@@ -15,8 +15,8 @@
         <p class="nexabold text-xs-center"> Promociones Activas: 4 </p>
       </div>
     </div>
-    
-  </div> 
+
+  </div>
 </transition>
 </template>
 
@@ -74,8 +74,8 @@ export default {
   font-size 10px
 .type-account-value
   font-size 16px
-  padding: 10px 10px; 
-  background: #90a2ce;;
+  padding: 10px 10px;
+  background: #90a2ce;
   border-radius: 40px;
 .brand-font
   font-family: Quicksand,Roboto,serif
@@ -110,11 +110,11 @@ export default {
   font-weight: 500
   color: #b9b9b99e
 
-.slide-enter-active 
-  transition: all 1s ease
-.slide-leave-active 
-  transition: all .8s ease
+.slide-enter-active
+  transition: all .1s ease
+.slide-leave-active
+  transition: all .4s ease
 .slide-enter, .slide-leave-to
   transform: translateX(300px)
- 
+
 </style>

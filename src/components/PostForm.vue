@@ -69,7 +69,7 @@
             v-model="postEdit.location"
             label="Ubicarlo en:"
             item-value="id"
-            item-text="label"
+            item-text="name"
             single-line
             bottom
           ></v-select>
@@ -109,6 +109,7 @@
 </template>
 
 <script>
+import { EventBus } from '../event_bus'
 
 export default {
   name: 'PostForm',
@@ -122,16 +123,23 @@ export default {
     return {
       isDisabledToCreate: false,
       infomessage: '',
-      location_items: [
-        { label: 'ZONA 1', id: '1' },
-        { label: 'ZONA 2', id: '2' },
-        { label: 'ZONA 3', id: '3' }
-      ],
+      location_items: [],
       timepicker_date: null,
       timepicker_menu: false
     }
   },
   methods: {
+    fetchDependencies () {
+      let self = this
+      return new Promise((resolve, reject) => {
+        this.$graphito.call_query('fetchAllSectors').then(res => {
+          self.location_items = res.allSectors
+          resolve(true)
+        }).catch(err => {
+          reject(err)
+        })
+      })
+    },
     createOrUpdatePost: function () {
       // test
       this.postEdit.tags = this.postEdit.pseudotags.join(',')
@@ -140,10 +148,7 @@ export default {
       if (this.postEdit.createdAt === undefined) {
         this.postEdit.createdAt = '13/13/13'
       }
-      console.log(this.postEdit.finishDate)
-      console.log(new Date(this.postEdit.finishDate))
-      let expireAt = new Date(this.postEdit.finishDate).getTime()
-      console.log(expireAt)
+
       if (this.isNew) {
         let self = this
         this.$graphito.call_mutation('createPost',
@@ -153,8 +158,9 @@ export default {
             title: self.postEdit.title,
             stock: self.postEdit.stock,
             tags: self.postEdit.tags,
-            expireAt: expireAt,
-            image: 'http://13.90.253.208:9300/api/v1/i/nombre'
+            expireAt: new Date(this.postEdit.finishDate).getTime(),
+            image: 'http://13.90.253.208:9300/api/v1/i/nombre',
+            locationIds: self.postEdit.location
           }
         ).then(res => {
           this.infomessage = 'Promocion creada'
@@ -177,8 +183,10 @@ export default {
             byId: 'cjbgrs3i101180189qwrhkjgj',
             title: self.postEdit.title,
             stock: self.postEdit.stock,
-            expireAt: (new Date(self.postEdit.finishDate)).getMilliseconds(),
-            tags: self.postEdit.tags
+            expireAt: (new Date(self.postEdit.finishDate)).getTime(),
+            tags: self.postEdit.tags,
+            image: 'http://13.90.253.208:9300/api/v1/i/nombre',
+            locationIds: self.postEdit.location
           }
         ).then(res => {
           this.infomessage = 'Promocion editada'
@@ -202,6 +210,16 @@ export default {
         return this.postObj
       }
     }
+  },
+  created () {
+    EventBus.$emit('is-loading', true)
+    this.fetchDependencies().then(done => {
+      EventBus.$emit('is-loading', false)
+      console.log(done)
+    }).catch(err => {
+      EventBus.$emit('is-loading', false)
+      console.log(err)
+    })
   }
 }
 </script>

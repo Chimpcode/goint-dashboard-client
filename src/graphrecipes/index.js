@@ -21,6 +21,7 @@ export default {
         image
         type
         updatedAt
+        isActive
       }
     }`,
     fetchAllLocations: `
@@ -109,6 +110,7 @@ export default {
         stock
         title
         createdAt
+        isActive
       }
     }
     `,

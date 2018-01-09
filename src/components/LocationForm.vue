@@ -11,6 +11,7 @@
         <template v-if="kindForm === 'ubicacion'">
           <v-card-title class="title mb-4"> {{ editData === undefined ? 'Agregar' : 'Editar' }} Ubicacion &nbsp;<span class="green--text">{{infomessage}}</span></v-card-title>
           <gmap-map
+            :options="{styles: styles}"
             :center="center"
             :zoom="13"
             map-type-id="terrain"
@@ -21,7 +22,7 @@
               :clickable="true"
               :draggable="true"
               @position_changed="updateMarker(locationForm, $event)"
-            ></gmap-marker>
+            />
           </gmap-map>
           <v-card-text>
             <div>
@@ -164,6 +165,242 @@ export default {
     return {
       infomessage: '',
       center: { lat: -12.117992, lng: -77.030646 },
+      styles: [
+        {
+          'featureType': 'administrative.locality',
+          'elementType': 'all',
+          'stylers': [
+            {
+              'hue': '#ff0200'
+            },
+            {
+              'saturation': 7
+            },
+            {
+              'lightness': 19
+            },
+            {
+              'visibility': 'on'
+            }
+          ]
+        },
+        {
+          'featureType': 'administrative.locality',
+          'elementType': 'labels.text',
+          'stylers': [
+            {
+              'visibility': 'on'
+            },
+            {
+              'saturation': '-3'
+            }
+          ]
+        },
+        {
+          'featureType': 'administrative.locality',
+          'elementType': 'labels.text.fill',
+          'stylers': [
+            {
+              'color': '#748ca3'
+            }
+          ]
+        },
+        {
+          'featureType': 'landscape',
+          'elementType': 'all',
+          'stylers': [
+            {
+              'hue': '#ff0200'
+            },
+            {
+              'saturation': -100
+            },
+            {
+              'lightness': 100
+            },
+            {
+              'visibility': 'simplified'
+            }
+          ]
+        },
+        {
+          'featureType': 'poi',
+          'elementType': 'all',
+          'stylers': [
+            {
+              'hue': '#ff0200'
+            },
+            {
+              'saturation': '23'
+            },
+            {
+              'lightness': '20'
+            },
+            {
+              'visibility': 'off'
+            }
+          ]
+        },
+        {
+          'featureType': 'poi.school',
+          'elementType': 'geometry.fill',
+          'stylers': [
+            {
+              'color': '#ffdbda'
+            },
+            {
+              'saturation': '0'
+            },
+            {
+              'visibility': 'on'
+            }
+          ]
+        },
+        {
+          'featureType': 'road',
+          'elementType': 'geometry',
+          'stylers': [
+            {
+              'hue': '#ff0200'
+            },
+            {
+              'saturation': '100'
+            },
+            {
+              'lightness': 31
+            },
+            {
+              'visibility': 'simplified'
+            }
+          ]
+        },
+        {
+          'featureType': 'road',
+          'elementType': 'geometry.stroke',
+          'stylers': [
+            {
+              'color': '#f39247'
+            },
+            {
+              'saturation': '0'
+            }
+          ]
+        },
+        {
+          'featureType': 'road',
+          'elementType': 'labels',
+          'stylers': [
+            {
+              'hue': '#008eff'
+            },
+            {
+              'saturation': -93
+            },
+            {
+              'lightness': 31
+            },
+            {
+              'visibility': 'on'
+            }
+          ]
+        },
+        {
+          'featureType': 'road.arterial',
+          'elementType': 'geometry.stroke',
+          'stylers': [
+            {
+              'visibility': 'on'
+            },
+            {
+              'color': '#ffe5e5'
+            },
+            {
+              'saturation': '0'
+            }
+          ]
+        },
+        {
+          'featureType': 'road.arterial',
+          'elementType': 'labels',
+          'stylers': [
+            {
+              'hue': '#bbc0c4'
+            },
+            {
+              'saturation': -93
+            },
+            {
+              'lightness': -2
+            },
+            {
+              'visibility': 'simplified'
+            }
+          ]
+        },
+        {
+          'featureType': 'road.arterial',
+          'elementType': 'labels.text',
+          'stylers': [
+            {
+              'visibility': 'off'
+            }
+          ]
+        },
+        {
+          'featureType': 'road.local',
+          'elementType': 'geometry',
+          'stylers': [
+            {
+              'hue': '#ff0200'
+            },
+            {
+              'saturation': -90
+            },
+            {
+              'lightness': -8
+            },
+            {
+              'visibility': 'simplified'
+            }
+          ]
+        },
+        {
+          'featureType': 'transit',
+          'elementType': 'all',
+          'stylers': [
+            {
+              'hue': '#e9ebed'
+            },
+            {
+              'saturation': 10
+            },
+            {
+              'lightness': 69
+            },
+            {
+              'visibility': 'on'
+            }
+          ]
+        },
+        {
+          'featureType': 'water',
+          'elementType': 'all',
+          'stylers': [
+            {
+              'hue': '#e9ebed'
+            },
+            {
+              'saturation': -78
+            },
+            {
+              'lightness': 67
+            },
+            {
+              'visibility': 'simplified'
+            }
+          ]
+        }
+      ], // styles here ],
       typeDialog: {
         sector: '40%',
         tienda: '40%',

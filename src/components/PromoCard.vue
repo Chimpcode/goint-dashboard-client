@@ -26,7 +26,20 @@
             <span>Fecha de Vencimiento</span>
         </v-tooltip>
         <v-spacer/>
-        <v-switch :hide-details="true" color="primary" :label="promoData.isActive?'Activo':'Desactivo'" v-model="promoData.isActive"></v-switch>
+        <v-dialog v-model="activateSwitchDialog" max-width="500px">
+          <v-card>
+            <v-card-title>
+              Estas seguro que deseas activar/desactivar la promocion ?
+            </v-card-title>
+            <v-card-actions>
+              <v-spacer/>
+              <v-btn color="primary" flat @click.native.stop="toggleActivationPost(promoData)">SI</v-btn>
+              <v-btn color="" flat @click.stop="() => {activateSwitchDialog=false; promoData.isActive = !promoData.isActive}">NO</v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+
+        <v-switch :hide-details="true" color="primary" @click.native.stop="activateSwitchDialog = true" :label="promoData.isActive?'Activo':'Desactivo'" v-model="promoData.isActive"></v-switch>
         <v-btn flat color="primary" @click.native.stop="onEditMode">EDITAR</v-btn>
 
         <v-dialog v-model="deleteDialog" max-width="500px">
@@ -48,6 +61,8 @@
 </template>
 
 <script>
+import { EventBus } from '../event_bus'
+
 export default {
   name: 'PromoCard',
   props: {
@@ -57,6 +72,7 @@ export default {
   data () {
     return {
       deleteDialog: false,
+      activateSwitchDialog: false,
       location_items: {
         1: 'ZONA 1',
         2: 'ZONA 2',
@@ -65,6 +81,18 @@ export default {
     }
   },
   methods: {
+    toggleActivationPost () {
+      EventBus.$emit('is-short-loading', true)
+      this.$graphito.call_mutation('updatePost', { id: this.promoData.id, isActive: this.promoData.isActive })
+        .then(res => {
+          EventBus.$emit('is-short-loading', false)
+          this.activateSwitchDialog = false
+        }, err => {
+          console.log(err)
+          EventBus.$emit('is-short-loading', false)
+          this.activateSwitchDialog = false
+        })
+    },
     onEditMode: function () {
       this.$emit('on-edit-mode', true)
     },
