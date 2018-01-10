@@ -70,6 +70,7 @@
             label="Ubicarlo en:"
             item-value="id"
             item-text="name"
+            multiple
             single-line
             bottom
           ></v-select>
@@ -142,6 +143,7 @@ export default {
     },
     createOrUpdatePost: function () {
       // test
+      let self = this
       this.postEdit.tags = this.postEdit.pseudotags.join(',')
       this.isDisabledToCreate = true
 
@@ -150,7 +152,7 @@ export default {
       }
 
       if (this.isNew) {
-        let self = this
+        console.log(self.postEdit)
         this.$graphito.call_mutation('createPost',
           {
             description: self.postEdit.description,
@@ -158,7 +160,7 @@ export default {
             title: self.postEdit.title,
             stock: self.postEdit.stock,
             tags: self.postEdit.tags,
-            expireAt: new Date(this.postEdit.finishDate).getTime(),
+            // expireAt: new Date(self.postEdit.finishDate).toISOString(),
             image: 'http://13.90.253.208:9300/api/v1/i/nombre',
             locationIds: self.postEdit.location
           }
@@ -183,7 +185,7 @@ export default {
             byId: 'cjbgrs3i101180189qwrhkjgj',
             title: self.postEdit.title,
             stock: self.postEdit.stock,
-            expireAt: (new Date(self.postEdit.finishDate)).getTime(),
+            // expireAt: (new Date(self.postEdit.finishDate)).getTime(),
             tags: self.postEdit.tags,
             image: 'http://13.90.253.208:9300/api/v1/i/nombre',
             locationIds: self.postEdit.location
